@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>اربح معلومة أو جائزة!</title>
+
+<!-- صوت احتفال -->
+<audio id="sound" src="https://www.fesliyanstudios.com/play-mp3/387" preload="auto"></audio>
+
+<style>
+    body {
+        font-family: 'Tajawal', TS Safaa Medium;
+        background: #ffffff;
+        margin: 0;
+        padding: 0;
+        text-align: center;
+        color: #000;
+        overflow-x: hidden;
+    }
+
+    header {
+        background: linear-gradient(135deg, #0c5753, #bfa76f);
+        padding: 35px 10px;
+        color: white;
+        font-size: 38px;
+        font-weight: bold;
+        text-align: center;
+        letter-spacing: 1px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    #card {
+        background: white;
+        width: 85%;
+        margin: 40px auto;
+        padding: 35px;
+        border-radius: 22px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        font-size: 30px;
+        line-height: 1.8;
+        min-height: 200px;
+        transition: 0.3s;
+    }
+
+    button {
+        background: #0c5753;
+        color: white;
+        border: none;
+        padding: 18px 45px;
+        font-size: 32px;
+        border-radius: 16px;
+        cursor: pointer;
+        transition: 0.25s;
+        font-weight: bold;
+    }
+    button:hover {
+        background: #09423f;
+    }
+
+    footer {
+        margin-top: 35px;
+        font-size: 20px;
+        color: #555;
+        padding-bottom: 25px;
+    }
+
+    .choices button {
+        display: block;
+        margin: 12px auto;
+        width: 85%;
+        font-size: 26px;
+    }
+
+    /* مؤثرات احتفالية */
+    .confetti {
+        position: fixed;
+        top: -10px;
+        width: 14px;
+        height: 14px;
+        background-color: #bfa76f;
+        animation: fall 3.5s linear forwards;
+        opacity: 0.9;
+        border-radius: 50%;
+        z-index: 9999;
+    }
+    @keyframes fall {
+        to {
+            transform: translateY(110vh) rotate(720deg);
+            opacity: 1;
+        }
+    }
+
+</style>
+</head>
+
+<body>
+
+<header> ✨ اربح معلومة أو جائزة! ✨ </header>
+
+<div id="card">
+اضغط الزر بالأسفل وابدأ المرح…  
+قد تربح **جائزة** 🎁  
+أو تعرف **معلومة دولية** 🌍  
+</div>
+
+<button onclick="start()">ابدأ الآن</button>
+
+<footer>
+    مشاركة الطالبة: <b>إيمان الحارثي</b><br>
+    دكتوراه الإدارة والتخطيط التربوي – جامعة أم القرى (1447هـ)
+</footer>
+
+<script>
+const infoItems = [
+    {
+        text: "🇫🇮 فنلندا: لا توجد امتحانات وطنية حتى الصف 8… التركيز على مهارات التفكير.",
+        source: "Wikipedia – Education in Finland"
+    },
+    {
+        text: "🇸🇬 سنغافورة: الأفضل عالميًا في الرياضيات منذ 1995 وفق اختبارات TIMSS.",
+        source: "Wikipedia – Education in Singapore"
+    },
+    {
+        text: "🇰🇷 كوريا الجنوبية: من أعلى نسب إتمام التعليم الثانوي حول العالم.",
+        source: "Wikipedia – Education in South Korea"
+    }
+];
+
+const quizItems = [
+    { question: "الدولة الأولى في اختبار PISA للقراءة 2018:", choices: ["سنغافورة", "كندا", "الصين (شنغهاي)"], answer: 2 },
+    { question: "الدولة ذات اليوم الدراسي القصير عالي الكفاءة:", choices: ["اليابان", "فنلندا", "الإمارات"], answer: 1 },
+    { question: "الدولة التي تعتمد نموذج 'المعلم الخبير':", choices: ["سنغافورة", "أمريكا", "سويسرا"], answer: 0 },
+    { question: "الدولة التي ألغت الواجبات المنزلية في الصفوف المبكرة:", choices: ["فنلندا", "الصين", "ألمانيا"], answer: 0 },
+    { question: "الدولة التي تعتمد التعلم القائم على المشاريع:", choices: ["أستراليا", "فنلندا", "كندا"], answer: 2 },
+    { question: "أعلى دولة في نسبة إتمام الثانوية:", choices: ["كوريا الجنوبية", "بريطانيا", "فرنسا"], answer: 0 },
+    { question: "الدولة التي تعتمد التعلم باللعب:", choices: ["الدنمارك", "فنلندا", "نيوزيلندا"], answer: 2 },
+    { question: "النظام الذي يعتمد 'مدارس المجتمع':", choices: ["أمريكا", "سنغافورة", "كوريا"], answer: 0 },
+    { question: "الدولة المتصدرة في تعليم العلوم TIMSS:", choices: ["سنغافورة", "اليابان", "النرويج"], answer: 0 },
+    { question: "أقصر يوم دراسي عالميًا:", choices: ["فنلندا", "هولندا", "إيسلندا"], answer: 2 },
+    { question: "الدولة التي تمنح 'ساعات تعلم ذاتي':", choices: ["الصين", "كوريا الجنوبية", "تركيا"], answer: 1 },
+    { question: "الدولة التي تعتمد التقويم المتوازن:", choices: ["نيوزيلندا", "سنغافورة", "كندا (أونتاريو)"], answer: 2 },
+    { question: "الدولة التي تعتمد 'مدارس بلا فصول':", choices: ["الدنمارك", "السويد", "نيوزيلندا"], answer: 2 },
+    { question: "الدولة التي تستخدم البيانات الضخمة لمراقبة التعلم:", choices: ["أمريكا", "الصين", "سنغافورة"], answer: 2 },
+    { question: "الدولة التي تعتمد ساعة قراءة يومية:", choices: ["فرنسا", "فنلندا", "إنجلترا"], answer: 2 },
+    { question: "الدولة التي أطلقت منصات تعلم رقمية حكومية:", choices: ["الصين", "كوريا", "عمان"], answer: 0 },
+    { question: "الدولة التي تعتمد المسارات المهنية في المدارس:", choices: ["ألمانيا", "إسبانيا", "المكسيك"], answer: 0 },
+    { question: "أكثر دولة تستثمر في تدريب المعلمين:", choices: ["سنغافورة", "كوريا", "اليابان"], answer: 2 },
+    { question: "الدولة التي تعتمد تعليمًا منخفض الواجبات:", choices: ["فنلندا", "اليابان", "الدنمارك"], answer: 2 },
+    { question: "أقل نظام تعليمي تكلفة وأعلى جودة:", choices: ["كوريا", "أستونيا", "ألمانيا"], answer: 1 }
+];
+
+let currentQuestion = null;
+const sound = document.getElementById("sound");
+
+// مؤثرات احتفال
+function confetti() {
+    for (let i = 0; i < 60; i++) {
+        let c = document.createElement("div");
+        c.classList.add("confetti");
+        c.style.left = Math.random() * 100 + "vw";
+        c.style.backgroundColor =
+            ["#bfa76f", "#0c5753", "#444", "#999"][Math.floor(Math.random()*4)];
+        c.style.animationDuration = 2 + Math.random()*2 + "s";
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 4000);
+    }
+    sound.play().catch(()=>{});
+}
+
+function start() {
+    const type = Math.random() < 0.5 ? "info" : "quiz";
+    if (type === "info") showInfo();
+    else showQuiz();
+}
+
+function showInfo() {
+    const item = infoItems[Math.floor(Math.random() * infoItems.length)];
+    document.getElementById("card").innerHTML =
+        `<p>${item.text}</p><br><small style="color:#555">📚 المصدر: ${item.source}</small>`;
+    confetti();
+}
+
+function showQuiz() {
+    currentQuestion = quizItems[Math.floor(Math.random() * quizItems.length)];
+    let html = `<p><b>${currentQuestion.question}</b></p><div class="choices">`;
+    currentQuestion.choices.forEach((ch, index) => {
+        html += `<button onclick="checkAnswer(${index})">${ch}</button>`;
+    });
+    html += `</div>`;
+    document.getElementById("card").innerHTML = html;
+}
+
+function checkAnswer(choice) {
+    if (choice === currentQuestion.answer) {
+        document.getElementById("card").innerHTML =
+            `<p>🎉 إجابة صحيحة! مبروووك ربحت جائزة مميزة! 🎁</p>`;
+        confetti();
+    } else {
+        document.getElementById("card").innerHTML +=
+            `<p style="color:#b30000; font-size:24px;">❌ ليست الإجابة الصحيحة… حاول مرة أخرى</p>`;
+    }
+}
+</script>
+
+</body>
+</html>
